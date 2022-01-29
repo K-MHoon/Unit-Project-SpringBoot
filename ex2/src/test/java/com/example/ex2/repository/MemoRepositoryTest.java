@@ -2,12 +2,17 @@ package com.example.ex2.repository;
 
 import com.example.ex2.entity.Memo;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.stream.IntStream;
 
@@ -27,14 +32,41 @@ class MemoRepositoryTest {
         System.out.println(memoRepository.getClass().getName());
     }
 
-    @Test
-    @DisplayName("100개의 데이터를 저장하고 갯수 확인")
-    void testInsertDummies() {
+    @BeforeEach
+    void beforeEach() {
+        // 100개의 데이터를 테스트 전에 insert
         IntStream.rangeClosed(1, 100).forEach(i -> {
             Memo memo = Memo.builder().memoText("Sample... " + i).build();
             memoRepository.save(memo);
         });
+    }
 
+    @Test
+    @DisplayName("정상적으로 저장됐는지 확인")
+    void testInsertCount() {
         assertThat(memoRepository.count()).isEqualTo(100);
     }
+
+    @Test
+    @DisplayName("페이징 처리 확인")
+    void testPageDefault() {
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Memo> result = memoRepository.findAll(pageable);
+        assertThat(result.getTotalPages()).isEqualTo(10);
+        assertThat(result.getTotalElements()).isEqualTo(100L);
+        assertThat(result.getNumber()).isEqualTo(0);
+        assertThat(result.getSize()).isEqualTo(10);
+        assertThat(result.hasNext()).isTrue();
+        assertThat(result.isFirst()).isTrue();
+    }
+
+    @Test
+    @DisplayName("페이징 정렬 확인")
+    void testSort() {
+        Sort sort1 = Sort.by("mno").descending();
+        Pageable pageable = PageRequest.of(0, 10, sort1);
+        Page<Memo> result = memoRepository.findAll(pageable);
+        assertThat(result.getContent().get(0).getMno()).isEqualTo(100L);
+    }
+
 }
