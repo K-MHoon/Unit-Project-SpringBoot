@@ -14,8 +14,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
+import javax.transaction.Transactional;
+import java.util.List;
 import java.util.stream.IntStream;
 
+import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -69,4 +72,27 @@ class MemoRepositoryTest {
         assertThat(result.getContent().get(0).getMno()).isEqualTo(100L);
     }
 
+    @Test
+    @DisplayName("쿼리 메서드 테스트")
+    void testQueryMethods() {
+        List<Memo> list = memoRepository.findByMnoBetweenOrderByMnoDesc(70L, 80L);
+        assertThat(list.size()).isEqualTo(11);
+        assertThat(list.get(0).getMno()).isEqualTo(80L);
+        assertThat(list.get(10).getMno()).isEqualTo(70L);
+    }
+
+    @Test
+    @DisplayName("JPA Delete 테스트")
+    @Transactional
+    void testDeleteQueryMethods() {
+        int deletedMemoCount = memoRepository.deleteByMnoLessThan(10L);
+        assertThat(deletedMemoCount).isEqualTo(9);
+    }
+
+    @Test
+    @DisplayName("@Query 테스트")
+    void testSimpleQueryMethod() {
+        List<Memo> result = memoRepository.getListDesc();
+        assertThat(result.get(0).getMno()).isEqualTo(100L);
+    }
 }
