@@ -1,12 +1,19 @@
 package com.example.ex04.service;
 
 import com.example.ex04.dto.GuestBookDTO;
+import com.example.ex04.dto.PageRequestDTO;
+import com.example.ex04.dto.PageResultDTO;
 import com.example.ex04.entity.GuestBook;
 import com.example.ex04.repository.GuestBookRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.function.Function;
 
 @Service
 @Slf4j
@@ -26,5 +33,14 @@ public class GuestBookServiceImpl implements GuestBookService {
         repository.save(entity);
 
         return entity.getId();
+    }
+
+    @Override
+    public PageResultDTO<GuestBookDTO, GuestBook> getList(PageRequestDTO requestDTO) {
+        Pageable pageable = requestDTO.getPageable(Sort.by("id").descending());
+        Page<GuestBook> result = repository.findAll(pageable);
+        Function<GuestBook, GuestBookDTO> fn =  (entity -> entityToDto(entity));
+
+        return new PageResultDTO<>(result, fn);
     }
 }
