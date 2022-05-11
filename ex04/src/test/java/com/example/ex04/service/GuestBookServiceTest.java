@@ -4,6 +4,7 @@ import com.example.ex04.dto.GuestBookDTO;
 import com.example.ex04.dto.PageRequestDTO;
 import com.example.ex04.dto.PageResultDTO;
 import com.example.ex04.entity.GuestBook;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,10 +33,22 @@ class GuestBookServiceTest {
 
     @Test
     public void testList() {
+        //given
         PageRequestDTO pageRequestDTO = PageRequestDTO.builder().page(1).size(10).build();
+
+        //when
         PageResultDTO<GuestBookDTO, GuestBook> resultDTO = service.getList(pageRequestDTO);
+
+        //then
+        Assertions.assertEquals(resultDTO.isPrev(), false);
+        Assertions.assertEquals(resultDTO.isNext(), true);
+        Assertions.assertEquals(resultDTO.getPage(), 1);
+        Assertions.assertEquals(resultDTO.getSize(), 10);
+
+        //print
         for (GuestBookDTO guestBookDTO : resultDTO.getDtoList()) {
             System.out.println(guestBookDTO);
         }
+        resultDTO.getPageList().forEach(System.out::print);
     }
 }
