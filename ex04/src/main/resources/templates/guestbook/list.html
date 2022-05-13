@@ -37,5 +37,10 @@
                 <a class="page-link" href="#">Next</a>
             </li>
         </ul>
+        <script th:inline="javascript">
+            var msg = [[${msg}]];
+            console.log(msg);
+
+        </script>
     </th:block>
 </th:block>
