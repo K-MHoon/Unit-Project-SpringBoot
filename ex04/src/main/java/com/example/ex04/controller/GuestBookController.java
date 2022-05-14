@@ -48,12 +48,21 @@ public class GuestBookController {
         return "redirect:/guestbook/list";
     }
 
-    @GetMapping("/read")
+    @GetMapping({"/read", "/modify"})
     public void read(Long id, @ModelAttribute("requestDTO") PageRequestDTO requestDTO, Model model) {
         log.info("id : {}", id);
         GuestBookDTO dto = service.read(id);
         model.addAttribute("dto", dto);
     }
 
+    @PostMapping("/remove")
+    public String remove(Long id, RedirectAttributes redirectAttributes) {
+
+        log.info("id: {}", id);
+        service.remove(id);
+        redirectAttributes.addFlashAttribute("msg", id);
+        return "redirect:/guestbook/list";
+
+    }
 
 }

@@ -37,6 +37,7 @@ public class GuestBookServiceImpl implements GuestBookService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public PageResultDTO<GuestBookDTO, GuestBook> getList(PageRequestDTO requestDTO) {
         Pageable pageable = requestDTO.getPageable(Sort.by("id").descending());
         Page<GuestBook> result = repository.findAll(pageable);
@@ -46,8 +47,30 @@ public class GuestBookServiceImpl implements GuestBookService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public GuestBookDTO read(Long id) {
         Optional<GuestBook> result = repository.findById(id);
         return result.isPresent() ? entityToDto(result.get()) : null;
+    }
+
+    @Override
+    @Transactional
+    public void remove(Long id) {
+        repository.deleteById(id);
+    }
+
+    @Override
+    @Transactional
+    public void modify(GuestBookDTO dto) {
+        Optional<GuestBook> result = repository.findById(dto.getId());
+
+        if(result.isPresent()) {
+            GuestBook entity = result.get();
+
+            entity.updateTitle(dto.getTitle());
+            entity.updateContent(dto.getContent());
+
+            repository.save(entity);
+        }
     }
 }
