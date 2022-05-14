@@ -29,4 +29,6 @@ public interface GuestBookService {
                 .writer(dto.getWriter())
                 .build();
     }
+
+    GuestBookDTO read(Long id);
 }
