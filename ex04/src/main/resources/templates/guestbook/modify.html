@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+<script src="http://code.jquery.com/jquery-latest.js"></script>
 <th:block th:replace="~{/layout/basic :: setContent(~{this::content})}">
     <th:block th:fragment="content">
         <h1 class="mt-4">GuestBook Modify Page</h1>
         <form action="/guestbook/modify" method="post">
+            <input type="hidden" name="page" th:value="${requestDTO.page}">
             <div class="form-group">
                 <label>id</label>
                 <input type="text" class="form-control" name="id" th:value="${dto.id}" readonly>
@@ -32,10 +34,30 @@
             </div>
         </form>
 
-        <button type="button" class="btn btn-primary">수정</button>
-        <button type="button" class="btn btn-info">목록</button>
-        <button type="button" class="btn btn-danger">삭제</button>
+        <button type="button" class="btn btn-primary modifyBtn">수정</button>
+        <button type="button" class="btn btn-info listBtn">목록</button>
+        <button type="button" class="btn btn-danger removeBtn">삭제</button>
 
+        <script th:inline="javascript">
+            var actionForm = $("form");
 
+            $(".modifyBtn").click(function() {
+                if(!confirm("수정하시겠습니까?")) {
+                    return ;
+                }
+
+                actionForm
+                .attr("action", "/guestbook/modify")
+                .attr("method","post")
+                .submit();
+            })
+
+            $(".removeBtn").click(function() {
+                actionForm
+                .attr("action", "/guestbook/remove")
+                .attr("method", "post")
+                .submit();
+            });
+        </script>
     </th:block>
 </th:block>
