@@ -40,15 +40,34 @@ class GuestBookServiceTest {
         PageResultDTO<GuestBookDTO, GuestBook> resultDTO = service.getList(pageRequestDTO);
 
         //then
-        Assertions.assertEquals(resultDTO.isPrev(), false);
-        Assertions.assertEquals(resultDTO.isNext(), true);
-        Assertions.assertEquals(resultDTO.getPage(), 1);
-        Assertions.assertEquals(resultDTO.getSize(), 10);
+        assertEquals(resultDTO.isPrev(), false);
+        assertEquals(resultDTO.isNext(), true);
+        assertEquals(resultDTO.getPage(), 1);
+        assertEquals(resultDTO.getSize(), 10);
 
         //print
         for (GuestBookDTO guestBookDTO : resultDTO.getDtoList()) {
             System.out.println(guestBookDTO);
         }
         resultDTO.getPageList().forEach(System.out::print);
+    }
+
+    @Test
+    public void testSearch() {
+        PageRequestDTO pageRequestDTO = PageRequestDTO.builder()
+                .page(1)
+                .size(10)
+                .type("tc")
+                .keyword("한글")
+                .build();
+
+        PageResultDTO<GuestBookDTO, GuestBook> resultDTO = service.getList(pageRequestDTO);
+
+        System.out.println("PREV : " + resultDTO.isPrev());
+        System.out.println("NEXT : " + resultDTO.isNext());
+        System.out.println("TOTAL : " + resultDTO.getTotalPage());
+        for (GuestBookDTO guestBookDTO : resultDTO.getDtoList()) {
+            System.out.println(guestBookDTO);
+        }
     }
 }
