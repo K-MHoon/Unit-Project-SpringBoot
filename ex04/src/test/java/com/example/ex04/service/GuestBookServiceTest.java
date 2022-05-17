@@ -25,7 +25,7 @@ class GuestBookServiceTest {
         GuestBookDTO bookDTO = GuestBookDTO.builder()
                 .title("Simple Title Test")
                 .content("Simple Content Test")
-                .writer("user0")
+//                .writer("user0")
                 .build();
 
         System.out.println(service.register(bookDTO));

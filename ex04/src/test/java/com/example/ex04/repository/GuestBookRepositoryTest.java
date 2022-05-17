@@ -1,6 +1,7 @@
 package com.example.ex04.repository;
 
 import com.example.ex04.entity.GuestBook;
+import com.example.ex04.entity.Member;
 import com.example.ex04.entity.QGuestBook;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -33,13 +34,17 @@ class GuestBookRepositoryTest {
     @Transactional
     @Rollback(false)
     public void insertDummies() {
-        IntStream.rangeClosed(1, 300).forEach(i -> {
+
+        IntStream.rangeClosed(1, 100).forEach(i -> {
+
+            Member member = Member.builder().email("user" + i + "@aaa.com").build();
+
             GuestBook guestBook = GuestBook.builder()
                     .title("Title...." + i)
                     .content("Content..." + i)
-                    .writer("user" + (i % 10))
+                    .writer(member)
                     .build();
-            System.out.println(guestBookRepository.save(guestBook));
+            guestBookRepository.save(guestBook);
         });
     }
 

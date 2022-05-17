@@ -1,6 +1,7 @@
 package com.example.ex04.service;
 
 import com.example.ex04.dto.GuestBookDTO;
+import com.example.ex04.dto.MemberDTO;
 import com.example.ex04.dto.PageRequestDTO;
 import com.example.ex04.dto.PageResultDTO;
 import com.example.ex04.entity.GuestBook;
@@ -15,7 +16,7 @@ public interface GuestBookService {
                 .id(entity.getId())
                 .title(entity.getTitle())
                 .content(entity.getContent())
-                .writer(entity.getWriter())
+//                .writer()
                 .regDate(entity.getRegDate())
                 .modDate(entity.getModDate())
                 .build();
@@ -26,7 +27,7 @@ public interface GuestBookService {
                 .id(dto.getId())
                 .title(dto.getTitle())
                 .content(dto.getContent())
-                .writer(dto.getWriter())
+//                .writer(dto.getWriter())
                 .build();
     }
 

@@ -12,12 +12,11 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 @Data
-public class GuestBookDTO {
+public class MemberDTO {
 
-    private Long id;
-    private String title;
-    private String content;
-    public MemberDTO writer;
+    private String email;
+    private String password;
+    private String name;
     @DateTimeFormat(pattern = "yyyy/MM/dd HH:mm:ss")
     private LocalDateTime regDate;
     @DateTimeFormat(pattern = "yyyy/MM/dd HH:mm:ss")
