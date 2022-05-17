@@ -22,8 +22,12 @@ public class GuestBook extends BaseEntity {
     @Column(length = 1500, nullable = false)
     private String content;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
     @Column(length = 50, nullable = false)
-    public String writer;
+    public Member writer;
+
+
 
     public void updateTitle(String title) {
         this.title = title;
