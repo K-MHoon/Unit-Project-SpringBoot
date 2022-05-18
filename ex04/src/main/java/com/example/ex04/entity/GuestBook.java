@@ -3,13 +3,15 @@ package com.example.ex04.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString(exclude = {"writer"})
+@ToString(exclude = {"writer", "replyList"})
 public class GuestBook extends BaseEntity {
 
     @Id
@@ -25,6 +27,9 @@ public class GuestBook extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     public Member writer;
+
+    @OneToMany(mappedBy = "guestBook")
+    List<Reply> replyList = new ArrayList<>();
 
     public void updateTitle(String title) {
         this.title = title;

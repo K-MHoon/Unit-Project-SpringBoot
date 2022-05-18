@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
@@ -128,6 +129,32 @@ class GuestBookRepositoryTest {
 
         System.out.println(guestBook);
         System.out.println(guestBook.getWriter());
+    }
+
+    @Test
+    @DisplayName("페치 조인으로 한 번에 데이터 가져오기 테스트")
+    @Transactional
+    public void testReadWithWriter() {
+        Optional<GuestBook> result = guestBookRepository.getGuestBookWithWriter(100L);
+
+        GuestBook guestBook = result.get();
+
+        System.out.println(guestBook);
+        System.out.println(guestBook.getWriter());
+    }
+
+
+    @Test
+    @DisplayName("페치 조인으로 한 번에 댓글 데이터 가져오기 테스트")
+    @Transactional
+    public void testReadWithReply() {
+        Optional<GuestBook> result = guestBookRepository.getGuestBookWithReply(91L);
+
+        GuestBook guestBook = result.get();
+
+        for (int i = 0; i < guestBook.getReplyList().size(); i++) {
+            System.out.println(guestBook.getReplyList().get(i));
+        }
     }
 
 }
