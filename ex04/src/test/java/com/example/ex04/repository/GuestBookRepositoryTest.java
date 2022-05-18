@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.stream.IntStream;
 
 import static com.example.ex04.entity.QGuestBook.*;
@@ -117,5 +118,16 @@ class GuestBookRepositoryTest {
     }
 
 
+    @Test
+    @DisplayName("N+1 확인해보기")
+    @Transactional
+    public void testRead1() {
+        Optional<GuestBook> result = guestBookRepository.findById(100L);
+
+        GuestBook guestBook = result.get();
+
+        System.out.println(guestBook);
+        System.out.println(guestBook.getWriter());
+    }
 
 }
