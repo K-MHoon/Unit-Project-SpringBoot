@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
@@ -143,7 +144,6 @@ class GuestBookRepositoryTest {
         System.out.println(guestBook.getWriter());
     }
 
-
     @Test
     @DisplayName("페치 조인으로 한 번에 댓글 데이터 가져오기 테스트")
     @Transactional
@@ -155,6 +155,32 @@ class GuestBookRepositoryTest {
         for (int i = 0; i < guestBook.getReplyList().size(); i++) {
             System.out.println(guestBook.getReplyList().get(i));
         }
+    }
+
+    @Test
+    @DisplayName("전체 게시글, 댓글, 작성자 정보 가져오기")
+    @Transactional
+    public void testReadWithWriterAndReply() {
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("id").descending());
+
+        Page<Object[]> book = guestBookRepository.getGuestBookWithWriterAndReply(pageable);
+
+        book.get().forEach(row -> {
+            Object[] arr = row;
+            System.out.println(Arrays.toString(arr));
+        });
+    }
+
+    @Test
+    @DisplayName("1개의 게시글, 댓글, 작성자 정보 가져오기")
+    @Transactional
+    public void testRead3() {
+
+        Object result = guestBookRepository.getGuestBookById(100L);
+
+        Object[] arr = (Object[]) result;
+
+        System.out.println(Arrays.toString(arr));
     }
 
 }
