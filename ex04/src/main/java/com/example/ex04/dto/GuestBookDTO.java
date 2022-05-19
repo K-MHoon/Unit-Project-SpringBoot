@@ -17,9 +17,11 @@ public class GuestBookDTO {
     private Long id;
     private String title;
     private String content;
-    public MemberDTO writer;
+    private String writerEmail;
+    private String writerName;
     @DateTimeFormat(pattern = "yyyy/MM/dd HH:mm:ss")
     private LocalDateTime regDate;
     @DateTimeFormat(pattern = "yyyy/MM/dd HH:mm:ss")
     private LocalDateTime modDate;
+    private String replyCount;
 }
