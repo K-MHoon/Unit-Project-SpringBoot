@@ -38,5 +38,6 @@ public interface GuestBookService {
 
     GuestBookDTO read(Long id);
     void remove(Long id);
+    void removeWithReplies(Long id);
     void modify(GuestBookDTO dto);
 }

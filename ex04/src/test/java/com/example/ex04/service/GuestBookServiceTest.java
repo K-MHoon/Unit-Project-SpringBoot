@@ -7,8 +7,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.EmptyResultDataAccessException;
+
+import javax.persistence.EntityNotFoundException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 class GuestBookServiceTest {
@@ -27,6 +31,15 @@ class GuestBookServiceTest {
                 .build();
 
         System.out.println(service.register(bookDTO));
+    }
+
+    @Test
+    public void testRemove() {
+        // given
+        Long id = 1L;
+
+        // when
+        service.removeWithReplies(id);
     }
 
     @Test

@@ -5,8 +5,8 @@ import com.example.ex04.dto.PageRequestDTO;
 import com.example.ex04.dto.PageResultDTO;
 import com.example.ex04.entity.GuestBook;
 import com.example.ex04.entity.Member;
-import com.example.ex04.entity.QGuestBook;
 import com.example.ex04.repository.GuestBookRepository;
+import com.example.ex04.repository.ReplyRepository;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.thymeleaf.util.StringUtils;
 
 import java.util.Optional;
 import java.util.function.Function;
@@ -29,7 +28,8 @@ import static org.thymeleaf.util.StringUtils.isEmpty;
 @RequiredArgsConstructor
 public class GuestBookServiceImpl implements GuestBookService {
 
-    private final GuestBookRepository repository;
+    private final GuestBookRepository guestBookRepository;
+    private final ReplyRepository replyRepository;
 
     @Override
     @Transactional
@@ -39,7 +39,7 @@ public class GuestBookServiceImpl implements GuestBookService {
 
         log.info("{}", entity);
 
-        repository.save(entity);
+        guestBookRepository.save(entity);
 
         return entity.getId();
     }
@@ -54,7 +54,7 @@ public class GuestBookServiceImpl implements GuestBookService {
         Function<Object[], GuestBookDTO> fn =  (entity -> entityToDto((GuestBook)entity[0],
                 (Member)entity[1], (Long)entity[2]));
 
-        Page<Object[]> result = repository.getGuestBookWithWriterAndReply(pageable);
+        Page<Object[]> result = guestBookRepository.getGuestBookWithWriterAndReply(pageable);
 
 
         return new PageResultDTO<>(result, fn);
@@ -88,7 +88,7 @@ public class GuestBookServiceImpl implements GuestBookService {
     @Override
     @Transactional(readOnly = true)
     public GuestBookDTO read(Long id) {
-        Object result = repository.getGuestBookById(id);
+        Object result = guestBookRepository.getGuestBookById(id);
         Object[] arr = (Object[]) result;
         return entityToDto((GuestBook)arr[0], (Member)arr[1], (Long)arr[2]);
     }
@@ -96,13 +96,20 @@ public class GuestBookServiceImpl implements GuestBookService {
     @Override
     @Transactional
     public void remove(Long id) {
-        repository.deleteById(id);
+        guestBookRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional
+    public void removeWithReplies(Long guestBookId) {
+        replyRepository.deleteById(guestBookId);
+        guestBookRepository.deleteById(guestBookId);
     }
 
     @Override
     @Transactional
     public void modify(GuestBookDTO dto) {
-        Optional<GuestBook> result = repository.findById(dto.getId());
+        Optional<GuestBook> result = guestBookRepository.findById(dto.getId());
 
         if(result.isPresent()) {
             GuestBook entity = result.get();
@@ -110,7 +117,7 @@ public class GuestBookServiceImpl implements GuestBookService {
             entity.updateTitle(dto.getTitle());
             entity.updateContent(dto.getContent());
 
-            repository.save(entity);
+            guestBookRepository.save(entity);
         }
     }
 
