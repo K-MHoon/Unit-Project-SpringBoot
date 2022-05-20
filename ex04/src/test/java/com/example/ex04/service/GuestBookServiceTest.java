@@ -51,6 +51,21 @@ class GuestBookServiceTest {
     }
 
     @Test
+    public void testRead() {
+        // given
+        Long id = 100L;
+
+        // when
+        GuestBookDTO guestBookDTO = service.read(id);
+
+        // then
+        assertEquals(guestBookDTO.getId(), 100L);
+
+        // print
+        System.out.println(guestBookDTO);
+    }
+
+    @Test
     public void testSearch() {
         PageRequestDTO pageRequestDTO = PageRequestDTO.builder()
                 .page(1)

@@ -88,10 +88,9 @@ public class GuestBookServiceImpl implements GuestBookService {
     @Override
     @Transactional(readOnly = true)
     public GuestBookDTO read(Long id) {
-        Optional<GuestBook> result = repository.findById(id);
-        return result.isPresent() ? entityToDto(result.get(),
-                result.get().getWriter(),
-                (long) result.get().getReplyList().size()) : null;
+        Object result = repository.getGuestBookById(id);
+        Object[] arr = (Object[]) result;
+        return entityToDto((GuestBook)arr[0], (Member)arr[1], (Long)arr[2]);
     }
 
     @Override
