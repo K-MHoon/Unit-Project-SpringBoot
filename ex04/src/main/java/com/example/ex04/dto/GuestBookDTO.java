@@ -23,5 +23,5 @@ public class GuestBookDTO {
     private LocalDateTime regDate;
     @DateTimeFormat(pattern = "yyyy/MM/dd HH:mm:ss")
     private LocalDateTime modDate;
-    private String replyCount;
+    private Integer replyCount;
 }

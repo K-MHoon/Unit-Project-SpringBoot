@@ -9,14 +9,16 @@ import com.example.ex04.entity.Member;
 public interface GuestBookService {
     Long register(GuestBookDTO dto);
 
-    PageResultDTO<GuestBookDTO, GuestBook> getList(PageRequestDTO requestDTO);
+    PageResultDTO<GuestBookDTO, Object[]> getList(PageRequestDTO requestDTO);
 
-    default GuestBookDTO entityToDto(GuestBook entity) {
+    default GuestBookDTO entityToDto(GuestBook entity, Member member, Long replyCount) {
         return GuestBookDTO.builder()
                 .id(entity.getId())
                 .title(entity.getTitle())
                 .content(entity.getContent())
-//                .writer()
+                .writerEmail(member.getEmail())
+                .writerName(member.getName())
+                .replyCount(replyCount.intValue())
                 .regDate(entity.getRegDate())
                 .modDate(entity.getModDate())
                 .build();

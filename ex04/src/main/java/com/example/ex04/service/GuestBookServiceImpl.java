@@ -4,6 +4,7 @@ import com.example.ex04.dto.GuestBookDTO;
 import com.example.ex04.dto.PageRequestDTO;
 import com.example.ex04.dto.PageResultDTO;
 import com.example.ex04.entity.GuestBook;
+import com.example.ex04.entity.Member;
 import com.example.ex04.entity.QGuestBook;
 import com.example.ex04.repository.GuestBookRepository;
 import com.querydsl.core.BooleanBuilder;
@@ -45,13 +46,16 @@ public class GuestBookServiceImpl implements GuestBookService {
 
     @Override
     @Transactional(readOnly = true)
-    public PageResultDTO<GuestBookDTO, GuestBook> getList(PageRequestDTO requestDTO) {
+    public PageResultDTO<GuestBookDTO, Object[]> getList(PageRequestDTO requestDTO) {
         Pageable pageable = requestDTO.getPageable(Sort.by("id").descending());
 
         BooleanBuilder booleanBuilder = getSearch(requestDTO);
 
-        Page<GuestBook> result = repository.findAll(booleanBuilder, pageable);
-        Function<GuestBook, GuestBookDTO> fn =  (entity -> entityToDto(entity));
+        Function<Object[], GuestBookDTO> fn =  (entity -> entityToDto((GuestBook)entity[0],
+                (Member)entity[1], (Long)entity[2]));
+
+        Page<Object[]> result = repository.getGuestBookWithWriterAndReply(pageable);
+
 
         return new PageResultDTO<>(result, fn);
     }
@@ -85,7 +89,9 @@ public class GuestBookServiceImpl implements GuestBookService {
     @Transactional(readOnly = true)
     public GuestBookDTO read(Long id) {
         Optional<GuestBook> result = repository.findById(id);
-        return result.isPresent() ? entityToDto(result.get()) : null;
+        return result.isPresent() ? entityToDto(result.get(),
+                result.get().getWriter(),
+                (long) result.get().getReplyList().size()) : null;
     }
 
     @Override
