@@ -64,6 +64,20 @@ class GuestBookServiceTest {
     }
 
     @Test
+    public void testModify() {
+        // given
+        Long id = 2L;
+
+        // when
+        GuestBookDTO build = GuestBookDTO.builder()
+                .id(id)
+                .title("제목 변경합니다..")
+                .content("내용 변경합니다..")
+                .build();
+        service.modify(build);
+    }
+
+    @Test
     public void testRead() {
         // given
         Long id = 100L;
