@@ -78,7 +78,7 @@ public class GuestBookServiceImpl implements GuestBookService {
             conditionBuilder.or(guestBook.content.contains(keyword));
         }
         if(type.contains("w")) {
-            conditionBuilder.or(guestBook.writer.contains(keyword));
+            conditionBuilder.or(guestBook.writer.name.contains(keyword));
         }
 
         booleanBuilder.and(conditionBuilder);

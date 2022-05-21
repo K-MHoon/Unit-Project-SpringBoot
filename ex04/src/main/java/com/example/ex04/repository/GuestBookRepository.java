@@ -1,6 +1,7 @@
 package com.example.ex04.repository;
 
 import com.example.ex04.entity.GuestBook;
+import com.example.ex04.repository.search.SearchGuestBookRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -13,7 +14,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface GuestBookRepository extends JpaRepository<GuestBook, Long>, QuerydslPredicateExecutor<GuestBook> {
+public interface GuestBookRepository extends JpaRepository<GuestBook, Long>, QuerydslPredicateExecutor<GuestBook>, SearchGuestBookRepository {
 
     @Query("select g from GuestBook g join fetch g.writer gw where g.id =:id")
     Optional<GuestBook> getGuestBookWithWriter(@Param("id") Long id);

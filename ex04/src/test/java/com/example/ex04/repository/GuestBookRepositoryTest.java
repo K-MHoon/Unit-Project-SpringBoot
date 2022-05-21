@@ -183,4 +183,9 @@ class GuestBookRepositoryTest {
         System.out.println(Arrays.toString(arr));
     }
 
+    @Test
+    public void testSearch1() {
+        guestBookRepository.search1();
+    }
+
 }
