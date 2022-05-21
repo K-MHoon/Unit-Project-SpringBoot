@@ -52,6 +52,7 @@ public class GuestBookController {
     public void read(Long id, @ModelAttribute("requestDTO") PageRequestDTO requestDTO, Model model) {
         log.info("id : {}", id);
         GuestBookDTO dto = service.read(id);
+        log.info("dto : {}", dto);
         model.addAttribute("dto", dto);
     }
 
