@@ -188,4 +188,10 @@ class GuestBookRepositoryTest {
         guestBookRepository.search1();
     }
 
+    @Test
+    public void testSearchPage() {
+        PageRequest pageable = PageRequest.of(0, 10, Sort.by("id").descending().and(Sort.by("title").ascending()));
+        Page<Object[]> result = guestBookRepository.searchPage("t", "1", pageable);
+    }
+
 }
