@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -35,5 +36,12 @@ class ReplyRepositoryTest {
             replyRepository.save(reply);
 
         });
+    }
+
+    @Test
+    public void testListByGuestBook() {
+        List<Reply> replyList = replyRepository.getRepliesByGuestBookOrderById(GuestBook.builder().id(95L).build());
+
+        replyList.forEach(reply -> System.out.println(reply));
     }
 }

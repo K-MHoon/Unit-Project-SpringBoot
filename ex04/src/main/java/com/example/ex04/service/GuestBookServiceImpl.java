@@ -54,8 +54,10 @@ public class GuestBookServiceImpl implements GuestBookService {
         Function<Object[], GuestBookDTO> fn =  (entity -> entityToDto((GuestBook)entity[0],
                 (Member)entity[1], (Long)entity[2]));
 
-        Page<Object[]> result = guestBookRepository.getGuestBookWithWriterAndReply(pageable);
-
+//        Page<Object[]> result = guestBookRepository.getGuestBookWithWriterAndReply(pageable);
+        Page<Object[]> result = guestBookRepository.searchPage(requestDTO.getType(),
+                requestDTO.getKeyword(),
+                requestDTO.getPageable(Sort.by("id").descending()));
 
         return new PageResultDTO<>(result, fn);
     }
