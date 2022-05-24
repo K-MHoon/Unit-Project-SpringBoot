@@ -9,7 +9,7 @@ import java.util.List;
 public interface ReplyService {
     
     Long register(ReplyDTO replyDTO);
-    List<ReplyDTO> getList(Long id);
+    List<ReplyDTO> getList(Long guestBookId);
 
     default ReplyDTO entityToDto(Reply reply) {
         return ReplyDTO.builder()

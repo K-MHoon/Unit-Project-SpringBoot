@@ -26,8 +26,8 @@ public class ReplyServiceImpl implements ReplyService {
     }
 
     @Override
-    public List<ReplyDTO> getList(Long id) {
-        List<Reply> result = replyRepository.getRepliesByGuestBookOrderById(GuestBook.builder().id(id).build());
+    public List<ReplyDTO> getList(Long guestBookId) {
+        List<Reply> result = replyRepository.getRepliesByGuestBookOrderById(GuestBook.builder().id(guestBookId).build());
         return result.stream().map(reply -> entityToDto(reply)).collect(Collectors.toList());
     }
 
