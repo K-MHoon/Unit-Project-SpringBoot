@@ -1,5 +1,6 @@
 package com.example.ex04.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,6 +17,7 @@ public class ReplyDTO {
     private Long id;
     private String text;
     private String replyer;
+    @JsonIgnore
     private Long guestBookId;
     private LocalDateTime regDate, modDate;
 }

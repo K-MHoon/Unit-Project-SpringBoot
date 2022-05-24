@@ -54,10 +54,40 @@
 
                 var listGroup = $(".replyList");
 
-                $(".replyCount").click(function () {
+                function formatTime(str) {
+                    var date = new Date(str);
+
+                    return date.getFullYear() + '/' +
+                        (date.getMonth() + 1) + '/' +
+                        date.getDate() + ' ' +
+                        date.getHours() + ':' +
+                        date.getMinutes();
+                }
+
+                function loadJSONData() {
                     $.getJSON('/replies/guestBook/' + id, function (arr) {
                         console.log(arr);
+
+                        var str = "";
+
+                        $('.replyCount').html(" Reply Count  " + arr.length);
+
+                        $.each(arr, function(idx, reply) {
+                            console.log(reply);
+
+                            str += ' <div class="card-body" data-id="'+reply.id+'"><b>' + reply.id + '</b>';
+                            str += ' <h5 class="card-title">' + reply.text + '</h5>';
+                            str += ' <h6 class="card-subtitle mb-2 text-muted">' +  reply.replyer + '</h6>';
+                            str += ' <p class="card-text">' + formatTime(reply.regDate) + '</p>';
+                            str += ' </div>';
+                        });
+
+                        listGroup.html(str);
                     })
+                }
+
+                $(".replyCount").click(function () {
+                    loadJSONData();
                 })
             });
         </script>
