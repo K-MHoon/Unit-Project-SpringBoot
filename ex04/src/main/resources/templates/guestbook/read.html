@@ -42,15 +42,45 @@
         </p>
         <div>
             <div class="mt-4">
+                <h5><span class="badge alert-info addReply">Add Reply</span></h5>
                 <h5><span class="badge alert-success replyCount">Reply Count [[${dto.replyCount}]]</span></h5>
             </div>
         </div>
         <div class="list-group replyList">
 
         </div>
+        <div class="modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Modal title</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-control">
+                            <input class="form" type="text" name="replyText" placeholder="Reply Text...">
+                        </div>
+                        <div class="form-control">
+                            <input class="form-control" type="text" name="replyer" placeholder="Replyer">
+                            <input type="hidden" name="rno">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger replyRemove">Remove</button>
+                        <button type="button" class="btn btn-warning replyModify">Modify</button>
+                        <button type="button" class="btn btn-primary replySave">Save</button>
+                        <button type="button" class="btn btn-outline-secondary replyClose">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <script th:inline="javascript">
             $(document).ready(function () {
                 var id = [[${dto.id}]];
+
+                console.log(id);
 
                 var listGroup = $(".replyList");
 
@@ -88,8 +118,47 @@
 
                 $(".replyCount").click(function () {
                     loadJSONData();
-                })
+                });
+
+                var modal = $('.modal');
+
+                $(".addReply").click(function() {
+                    modal.show();
+
+                    $('input[name="replyText"]').val('');
+                    $('input[name="replyer"]').val('');
+
+                    $(".modal-footer .btn").hide();
+                    $(".replySave, .replyClose").show();
+                });
+
+                $(".replySave").click(function () {
+                    var reply = {
+                        guest_book_id: id,
+                        text: $('input[name="replyText"]').val(),
+                        replyer: $('input[name="replyer"]').val(),
+                    }
+                    console.log(reply);
+
+                    $.ajax({
+                        url: '/replies/',
+                        method: 'post',
+                        data: JSON.stringify(reply),
+                        contentType: 'application/json; charset=utf-8',
+                        dataType: 'json',
+                        success: function(data) {
+                            console.log(data);
+
+                            var newRno = parseInt(data);
+                            alert(newRno + "번 댓글이 등록되었습니다.")
+                            modal.hide();
+                            loadJSONData();
+                        }
+                    })
+                });
             });
+
+
         </script>
     </th:block>
 </th:block>
