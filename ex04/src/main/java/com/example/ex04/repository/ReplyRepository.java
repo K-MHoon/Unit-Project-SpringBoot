@@ -12,8 +12,8 @@ import java.util.List;
 public interface ReplyRepository extends JpaRepository<Reply, Long> {
 
     @Modifying
-    @Query("delete from Reply r where r.guestBook.id = :id")
-    void deleteById(@Param("id") Long id);
+    @Query("delete from Reply r where r.guestBook.id = :bno")
+    void deleteByBno(@Param("bno") Long bno);
 
     List<Reply> getRepliesByGuestBookOrderById(GuestBook guestBook);
 }

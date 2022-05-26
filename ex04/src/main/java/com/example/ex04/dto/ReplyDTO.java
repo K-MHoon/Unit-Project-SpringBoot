@@ -1,6 +1,5 @@
 package com.example.ex04.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -17,7 +16,7 @@ import java.time.LocalDateTime;
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class ReplyDTO {
 
-    private Long id;
+    private Long rno;
     private String text;
     private String replyer;
     @JsonProperty("guest_book_id")

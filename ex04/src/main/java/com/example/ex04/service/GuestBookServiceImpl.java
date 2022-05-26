@@ -104,7 +104,7 @@ public class GuestBookServiceImpl implements GuestBookService {
     @Override
     @Transactional
     public void removeWithReplies(Long guestBookId) {
-        replyRepository.deleteById(guestBookId);
+        replyRepository.deleteByBno(guestBookId);
         guestBookRepository.deleteById(guestBookId);
     }
 

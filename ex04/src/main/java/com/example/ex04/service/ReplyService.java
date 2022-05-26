@@ -13,7 +13,7 @@ public interface ReplyService {
 
     default ReplyDTO entityToDto(Reply reply) {
         return ReplyDTO.builder()
-                .id(reply.getId())
+                .rno(reply.getId())
                 .text(reply.getText())
                 .replyer(reply.getReplyer())
                 .regDate(reply.getRegDate())
@@ -23,7 +23,7 @@ public interface ReplyService {
 
     default Reply dtoToEntity(ReplyDTO dto) {
         return Reply.builder()
-                .id(dto.getId())
+                .id(dto.getRno())
                 .text(dto.getText())
                 .replyer(dto.getReplyer())
                 .guestBook(GuestBook.builder().id(dto.getGuestBookId()).build())
