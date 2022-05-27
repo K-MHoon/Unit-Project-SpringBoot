@@ -8,6 +8,7 @@
 		<module>ex2</module>
         <module>ex3</module>
         <module>ex04</module>
+        <module>ex05</module>
     </modules>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
