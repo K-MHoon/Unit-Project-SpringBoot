@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -41,6 +42,23 @@ class ReviewRepositoryTest {
                     .build();
 
             reviewRepository.save(movieReview);
+        });
+    }
+
+    @Test
+    @DisplayName("영화 - 리뷰 목록 조회")
+    @Transactional(readOnly = true)
+    public void testGetMovieReviews() {
+        Movie movie = Movie.builder().mno(99L).build();
+
+        List<Review> result = reviewRepository.findByMovie(movie);
+
+        result.forEach(r -> {
+            System.out.println(r.getReviewnum());
+            System.out.println(r.getGrade());
+            System.out.println(r.getText());
+            System.out.println(r.getMember().getEmail());
+            System.out.println("----------------------------------");
         });
     }
 }

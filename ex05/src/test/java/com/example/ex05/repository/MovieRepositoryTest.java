@@ -58,6 +58,7 @@ class MovieRepositoryTest {
 
     @Test
     @DisplayName("영화 목록 조회")
+    @Transactional(readOnly = true)
     public void testListPage() {
         PageRequest pageRequest = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "mno"));
         Page<Object[]> result = movieRepository.getListPage(pageRequest);
@@ -69,6 +70,7 @@ class MovieRepositoryTest {
 
     @Test
     @DisplayName("영화 상세 정보 조회")
+    @Transactional(readOnly = true)
     public void testGetMovieWithAll() {
         List<Object[]> result = movieRepository.getMovieWithAll(99L);
         System.out.println(result);
