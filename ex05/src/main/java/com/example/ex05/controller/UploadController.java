@@ -2,6 +2,7 @@ package com.example.ex05.controller;
 
 import com.example.ex05.dto.UploadResultDTO;
 import lombok.extern.slf4j.Slf4j;
+import net.coobird.thumbnailator.Thumbnailator;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -62,7 +63,16 @@ public class UploadController {
             Path savePath = Paths.get(saveName);
 
             try {
+                // 원본 파일 저장
                 uploadFile.transferTo(savePath);
+
+                // 섬네일 파일은 s_를 추가한다.
+                String thumbnailSaveName = uploadPath + File.separator + folderPath + File.separator + "s_" + uuid + "_" + fileName;
+                File thumbnailFile = new File(thumbnailSaveName);
+
+                // 섬네일 생성
+                Thumbnailator.createThumbnail(savePath.toFile(), thumbnailFile, 100, 100);
+
                 resultDTOList.add(new UploadResultDTO(fileName, uuid, folderPath));
 
             } catch (IOException e) {
