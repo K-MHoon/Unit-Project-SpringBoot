@@ -1,6 +1,9 @@
 package com.example.ex05.controller;
 
+import com.example.ex05.dto.UploadResultDTO;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -11,6 +14,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -20,13 +25,16 @@ public class UploadController {
     private String uploadPath = "C:\\upload";
 
     @PostMapping("/uploadAjax")
-    public void uploadFile(MultipartFile[] uploadFiles) {
+    public ResponseEntity<List<UploadResultDTO>> uploadFile(MultipartFile[] uploadFiles) {
+
+        List<UploadResultDTO> resultDTOList = new ArrayList<>();
+
         for (MultipartFile uploadFile : uploadFiles) {
 
             // contentType image만 가능하게 설정
             if(uploadFile.getContentType().startsWith("image") == false) {
                 log.warn("this file is not image type");
-                return;
+                return new ResponseEntity<>(HttpStatus.FORBIDDEN);
             }
 
             // IE나 Edge는 전체 경로가 들어온다.
@@ -49,10 +57,13 @@ public class UploadController {
 
             try {
                 uploadFile.transferTo(savePath);
+                resultDTOList.add(new UploadResultDTO(fileName, uuid, folderPath));
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+        return new ResponseEntity<>(resultDTOList, HttpStatus.OK);
     }
 
     private String makeFolder() {
