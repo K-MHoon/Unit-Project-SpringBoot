@@ -2,14 +2,20 @@ package com.example.ex05.controller;
 
 import com.example.ex05.dto.UploadResultDTO;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
@@ -76,5 +82,30 @@ public class UploadController {
             uploadPathFolder.mkdirs();
         }
         return folderPath;
+    }
+
+    @GetMapping("/display")
+    public ResponseEntity<byte[]> getFile(String fileName) {
+        ResponseEntity<byte[]> result;
+
+        try {
+            String srcFileName = URLDecoder.decode(fileName, "UTF-8");
+
+            log.info("fileName = {}", srcFileName);
+
+            File file = new File(uploadPath + File.separator + srcFileName);
+
+            log.info("file = {}", file);
+
+            HttpHeaders header = new HttpHeaders();
+
+            header.add("Content-Type", Files.probeContentType(file.toPath()));
+            result = new ResponseEntity<>(FileCopyUtils.copyToByteArray(file), header, HttpStatus.OK);
+
+        } catch (IOException ex) {
+            log.error(ex.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return result;
     }
 }
