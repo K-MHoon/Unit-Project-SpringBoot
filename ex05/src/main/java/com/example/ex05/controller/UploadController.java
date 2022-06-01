@@ -7,6 +7,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.file.Files;
@@ -117,5 +119,28 @@ public class UploadController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return result;
+    }
+
+    @DeleteMapping("/removeFile")
+    public ResponseEntity<Boolean> removeFile(String fileName) {
+
+        String srcFileName = null;
+        try {
+            srcFileName = URLDecoder.decode(fileName, "UTF-8");
+
+            // 원본 파일 삭제
+            File file = new File(uploadPath + File.separator + srcFileName);
+            boolean result = file.delete();
+
+            // 섬네일 삭제
+            log.info("file.getParent() = {}", file.getParent());
+            log.info("file.getName() = {}", file.getName());
+            File thumbnail = new File(file.getParent() + File.separator + "s_" + file.getName());
+            result = thumbnail.delete();
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(false, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

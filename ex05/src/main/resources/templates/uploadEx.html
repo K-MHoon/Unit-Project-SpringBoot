@@ -44,10 +44,46 @@
 
             let divArea = $('.uploadResult');
 
+            let str = "";
+
             for (let i = 0; i < arr.length; i++) {
-                divArea.append("<img src='/display?fileName="+ arr[i].thumbnailURL +"'>");
+                str += "<div>";
+                str += "<img src='/display?fileName="+ arr[i].thumbnailURL +"'>";
+                str += "<button class='removeBtn' data-name='" + arr[i].imageURL +"'>REMOVE</button>";
+                str += "</div>";
             }
+            divArea.append(str);
         }
+
+        // <div>는 동적으로 생성되기 때문에 바로 클릭 이벤트 처리를 할 수 없음
+        // 위임하는 방식으로 이벤트를 처리해야 한다.
+        $(".uploadResult").on("click", ".removeBtn", function(e) {
+            let target = $(this);
+            let fileName = target.data("name");
+            let targetDiv = $(this).closest("div"); // 가장 가까운 div 찾는다.
+
+            console.log(fileName);
+
+            let formData = new FormData();
+            formData.append("fileName", fileName);
+
+            $.ajax({
+                url: '/removeFile',
+                processData: false,
+                contentType: false,
+                data: formData,
+                type: 'DELETE',
+                dataType: 'json',
+                success: function(result) {
+                    if(result == true) {
+                        targetDiv.remove();
+                    }
+                },
+                error: function(jqxHR, textStatus, errorThrown) {
+                    console.log(textStatus);
+                }
+            });
+        });
     </script>
 </body>
 </html>
