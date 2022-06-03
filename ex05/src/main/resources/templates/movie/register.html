@@ -146,6 +146,41 @@
                     });
                 });
 
+                $(".uploadResult").on("click", "li button", function(e) {
+
+                    console.log("delete file");
+
+                    let targetFile = $(this).data("file"); // image URL이 들어있음.
+                    let targetLi = $(this).closest("li");
+
+                    $.ajax({
+                        url: '/removeFile',
+                        data: {fileName: targetFile},
+                        dataType: 'text',
+                        type: 'DELETE',
+                        success: function(result){
+                            alert(result);
+                            targetLi.remove();
+                        }
+                    });
+                });
+
+                $(".btn-primary").on("click", function(e) {
+                    e.preventDefault();
+
+                    let str = "";
+
+                    $(".uploadResult li").each(function(i, obj) {
+                        let target = $(obj);
+
+                        str += "<input type='hidden' name='imageDTOList["+i+"].imgName' value='"+target.data('name')+"'>";
+                        str += "<input type='hidden' name='imageDTOList["+i+"].path' value='"+target.data('path')+"'>";
+                        str += "<input type='hidden' name='imageDTOList["+i+"].uuid' value='"+target.data('uuid')+"'>";
+                    });
+
+                    $(".box").html(str);
+                    $("form").submit();
+                });
             });
         </script>
     </th:block>
