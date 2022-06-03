@@ -2,6 +2,8 @@ package com.example.ex05.service;
 
 import com.example.ex05.dto.MovieDTO;
 import com.example.ex05.dto.MovieImageDTO;
+import com.example.ex05.dto.PageRequestDTO;
+import com.example.ex05.dto.PageResultDTO;
 import com.example.ex05.entity.movie.Movie;
 import com.example.ex05.entity.movie.MovieImage;
 
@@ -25,9 +27,9 @@ public interface MovieService {
         entityMap.put("movie", movie);
 
         List<MovieImageDTO> imageDTOList = movieDTO.getImageDTOList();
-        if(imageDTOList != null && imageDTOList.size() > 0) {
+        if (imageDTOList != null && imageDTOList.size() > 0) {
             List<MovieImage> movieImageList = imageDTOList.stream().map(movieImageDTO ->
-                    MovieImage.builder ()
+                    MovieImage.builder()
                             .path(movieImageDTO.getPath())
                             .imgName(movieImageDTO.getImgName())
                             .uuid(movieImageDTO.getUuid())
@@ -41,5 +43,28 @@ public interface MovieService {
         return entityMap;
     }
 
+    PageResultDTO<MovieDTO, Object[]> getList(PageRequestDTO requestDTO);
 
+    default MovieDTO entitiesToDTO(Movie movie, List<MovieImage> movieImages, Double avg, Long reviewCnt) {
+        MovieDTO movieDTO = MovieDTO.builder()
+                .mno(movie.getMno())
+                .title(movie.getTitle())
+                .regDate(movie.getRegDate())
+                .modDate(movie.getModDate())
+                .build();
+
+        List<MovieImageDTO> movieImageDTOList = movieImages.stream().map(movieImage ->
+                MovieImageDTO.builder()
+                        .imgName(movieImage.getImgName())
+                        .path(movieImage.getPath())
+                        .uuid(movieImage.getUuid())
+                        .build()
+        ).collect(Collectors.toList());
+
+        movieDTO.setImageDTOList(movieImageDTOList);
+        movieDTO.setAvg(avg);
+        movieDTO.setReviewCnt(reviewCnt);
+
+        return movieDTO;
+    }
 }
