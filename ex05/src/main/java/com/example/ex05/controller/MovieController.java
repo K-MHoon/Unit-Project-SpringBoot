@@ -1,10 +1,12 @@
 package com.example.ex05.controller;
 
 import com.example.ex05.dto.MovieDTO;
+import com.example.ex05.dto.PageRequestDTO;
 import com.example.ex05.service.MovieService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,4 +35,12 @@ public class MovieController {
 
         return "redirect:/movie/list";
     }
+
+    @GetMapping("/list")
+    public void list(PageRequestDTO pageRequestDTO, Model model) {
+        log.info("pageRequestDTO : {}", pageRequestDTO);
+        model.addAttribute("result", movieService.getList(pageRequestDTO));
+    }
+
+
 }
