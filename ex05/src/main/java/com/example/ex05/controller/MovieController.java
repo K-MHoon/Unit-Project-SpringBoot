@@ -2,7 +2,7 @@ package com.example.ex05.controller;
 
 import com.example.ex05.dto.MovieDTO;
 import com.example.ex05.dto.PageRequestDTO;
-import com.example.ex05.service.MovieService;
+import com.example.ex05.service.movie.MovieService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;

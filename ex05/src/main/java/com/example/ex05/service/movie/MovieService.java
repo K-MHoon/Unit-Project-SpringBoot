@@ -1,4 +1,4 @@
-package com.example.ex05.service;
+package com.example.ex05.service.movie;
 
 import com.example.ex05.dto.MovieDTO;
 import com.example.ex05.dto.MovieImageDTO;
