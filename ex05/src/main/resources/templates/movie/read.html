@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <script src="http://code.jquery.com/jquery-latest.js"></script>
+<script th:src="@{/js/starrr.js}"></script>
+<link th:href="@{/css/starrr.css}" rel="stylesheet">
+<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/css/font-awesome.min.css">
 <style>
     .uploadResult {
         width: 100%;
@@ -60,6 +63,13 @@
 
             });
         </script>
+        <button type="button" class="btn btn-info addReviewBtn">
+            Review Register
+        </button>
+
+        <div class="list-group reviewList">
+
+        </div>
 
         <div class="reviewModal modal" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
@@ -113,5 +123,36 @@
                 </div>
             </div>
         </div>
+        <script>
+            $(document).ready(function(e) {
+                let grade = 0;
+                let mno = [[${dto.mno}]];
+
+                $('.starrr').starrr({
+                    rating: grade,
+                    change: function(e, value) {
+                        if(value) {
+                            console.log(value);
+                            grade = value;
+                        }
+                    }
+                });
+
+                let reviewModal = $(".reviewModal");
+                let inputMid = $('.input[name="mid"]');
+                let inputText = $('input[name="text"]');
+
+                $('.addReviewBtn').click(function() {
+                    inputMid.val("");
+                    inputText.val("");
+
+                    $(".removeBtn , .modifyBtn").hide();
+                    $(".reviewSaveBtn").show();
+
+                    reviewModal.show();
+                })
+
+            });
+        </script>
     </th:block>
 </th:block>
