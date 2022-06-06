@@ -124,7 +124,7 @@
             </div>
         </div>
         <script>
-            $(document).ready(function(e) {
+            $(document).ready(function (e) {
                 let grade = 0;
                 let mno = [[${dto.mno}]];
 
@@ -139,9 +139,9 @@
                             date.getMinutes();
                     }
 
-                    $.getJSON("/reviews/" + mno + "/all", function(arr) {
+                    $.getJSON("/reviews/" + mno + "/all", function (arr) {
                         let str = "";
-                        $.each(arr, function(idx, review) {
+                        $.each(arr, function (idx, review) {
                             console.log(review);
                             str += '    <div class="card-body" data-reviewnum=' + review.reviewnum + ' data-mid=' + review.mid + '>';
                             str += '    <h5 class="card-title">' + review.text + ' <span>' + review.grade + '</span></h5>';
@@ -158,8 +158,8 @@
 
                 $('.starrr').starrr({
                     rating: grade,
-                    change: function(e, value) {
-                        if(value) {
+                    change: function (e, value) {
+                        if (value) {
                             console.log(value);
                             grade = value;
                         }
@@ -170,7 +170,7 @@
                 let inputMid = $('input[name="mid"]');
                 let inputText = $('input[name="text"]');
 
-                $('.addReviewBtn').click(function() {
+                $('.addReviewBtn').click(function () {
                     inputMid.val("");
                     inputText.val("");
 
@@ -181,30 +181,96 @@
                 });
 
                 $('.reviewSaveBtn').click(function () {
-                   let data = {
-                       mno:mno,
-                       grade:grade,
-                       text:inputText.val(),
-                       mid:inputMid.val()
-                   };
+                    let data = {
+                        mno: mno,
+                        grade: grade,
+                        text: inputText.val(),
+                        mid: inputMid.val()
+                    };
 
-                   console.log(data);
+                    console.log(data);
 
-                   $.ajax({
-                       url: '/reviews/'+mno,
-                       type: 'POST',
-                       data: JSON.stringify(data),
-                       contentType: "application/json; charset=utf-8",
-                       dataType: "text",
-                       success: function(result) {
-                           console.log("result: " + result);
-                           self.location.reload();
-                       }
-                   });
+                    $.ajax({
+                        url: '/reviews/' + mno,
+                        type: 'POST',
+                        data: JSON.stringify(data),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "text",
+                        success: function (result) {
+                            console.log("result: " + result);
+                            self.location.reload();
+                        }
+                    });
 
-                   reviewModal.hide();
+                    reviewModal.hide();
                 });
 
+                let reviewnum;
+
+                $(".reviewList").on("click", ".card-body", function () {
+
+                    $(".reviewSaveBtn").hide();
+                    $(".removeBtn , .modifyBtn").show();
+
+                    let targetReview = $(this);
+
+                    reviewnum = targetReview.data("reviewnum");
+                    console.log("reviewnum: " + reviewnum);
+                    inputMid.val(targetReview.data("mid"));
+                    // 복사(clone), 하위(span) 태그 삭제(remove), 이전 요소로 돌아가기(end), text 가져오기
+                    inputText.val(targetReview.find('.card-title').clone().children().remove().end().text());
+
+
+                    let grade = targetReview.find('.card-title span').html();
+                    $(".starrr a:nth-child(" + grade + ")").trigger('click');
+
+                    $('.reviewModal').show();
+                });
+
+                $(".modifyBtn").on("click", function () {
+                    let data = {
+                        reviewnum: reviewnum,
+                        mno: mno,
+                        grade: grade,
+                        text: inputText.val(),
+                        mid: inputMid.val()
+                    };
+
+                    console.log(data);
+
+                    $.ajax({
+                        url: '/reviews/' + mno + "/" + reviewnum,
+                        type: "PUT",
+                        data: JSON.stringify(data),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "text",
+                        success: function (result) {
+                            console.log("result: " + result);
+                            self.location.reload();
+                        }
+                    })
+                    reviewModal.hide();
+                });
+
+                $(".removeBtn").on("click", function() {
+                    let data = {
+                        reviewnum: reviewnum
+                    };
+
+                    console.log(data);
+
+                    $.ajax({
+                        url:'/reviews/' + mno + "/" + reviewnum,
+                        type: 'DELETE',
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "text",
+                        success: function(result) {
+                            console.log("result: " + result);
+                            self.location.reload();
+                        }
+                    });
+                    reviewModal.hide();
+                });
             });
         </script>
     </th:block>
