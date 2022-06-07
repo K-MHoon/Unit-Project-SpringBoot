@@ -97,7 +97,7 @@ public class UploadController {
     }
 
     @GetMapping("/display")
-    public ResponseEntity<byte[]> getFile(String fileName) {
+    public ResponseEntity<byte[]> getFile(String fileName, String size) {
         ResponseEntity<byte[]> result;
 
         try {
@@ -107,11 +107,19 @@ public class UploadController {
 
             File file = new File(uploadPath + File.separator + srcFileName);
 
+            // \s_ 제외하고 나머지 값
+            if(size != null && size.equals("1")) {
+                log.info("file getParent = {}, file.getName().substring(2) = {}", file.getParent(), file.getName().substring(2));
+                file = new File(file.getParent(), file.getName().substring(2));
+            }
+
             log.info("file = {}", file);
 
             HttpHeaders header = new HttpHeaders();
 
+            // MIME 타입 처리
             header.add("Content-Type", Files.probeContentType(file.toPath()));
+            // 파일 데이터 처리
             result = new ResponseEntity<>(FileCopyUtils.copyToByteArray(file), header, HttpStatus.OK);
 
         } catch (IOException ex) {
