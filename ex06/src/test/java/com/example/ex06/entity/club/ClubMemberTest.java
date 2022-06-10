@@ -8,6 +8,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.Commit;
 
+import javax.persistence.EntityNotFoundException;
+import java.util.Optional;
 import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -22,7 +24,6 @@ class ClubMemberTest {
     private PasswordEncoder passwordEncoder;
 
     @Test
-    @Commit
     public void insertDummies() {
 
         IntStream.rangeClosed(1,100).forEach(i -> {
@@ -43,5 +44,13 @@ class ClubMemberTest {
 
             repository.save(clubMember);
         });
+    }
+
+    @Test
+    public void findClubMemberGetClubMember() {
+        ClubMember clubMember = repository.findByEmail("user95@kmhoon.com", false)
+                .orElseThrow(() -> new EntityNotFoundException("해당 ClubMember가 존재하지 않습니다."));
+
+        System.out.println(clubMember);
     }
 }
