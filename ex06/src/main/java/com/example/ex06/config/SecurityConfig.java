@@ -19,13 +19,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-
-        auth.inMemoryAuthentication().withUser("user1")
-                .password("$2a$10$oOOjRESwzOVIcEdCAIV5L.39q3FPGyCcxZF0DKEHumqGtXP3Q3y4.")
-                .roles("USER");
-    }
+//    @Override
+//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+//
+//        auth.inMemoryAuthentication().withUser("user1")
+//                .password("$2a$10$oOOjRESwzOVIcEdCAIV5L.39q3FPGyCcxZF0DKEHumqGtXP3Q3y4.")
+//                .roles("USER");
+//    }
 
 
     // 접근제한 처리
