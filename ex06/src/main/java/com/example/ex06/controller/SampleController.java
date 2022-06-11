@@ -19,6 +19,7 @@ public class SampleController {
     }
 
     // 로그인한 사용자만 접근 가능
+    // @AuthenticationPrincipal은 별도의 캐스팅 작업 없이 실제 ClubAuthMemberDTO를 사용할 수 있다.
     @GetMapping("/member")
     public void exMember(@AuthenticationPrincipal ClubAuthMemberDTO clubAuthMemberDTO) {
         log.info("exMember");

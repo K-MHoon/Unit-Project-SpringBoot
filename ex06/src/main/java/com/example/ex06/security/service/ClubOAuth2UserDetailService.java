@@ -3,8 +3,10 @@ package com.example.ex06.security.service;
 import com.example.ex06.entity.club.ClubMember;
 import com.example.ex06.enums.club.ClubMemberRole;
 import com.example.ex06.repository.club.ClubMemberRepository;
+import com.example.ex06.security.dto.ClubAuthMemberDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -49,7 +52,17 @@ public class ClubOAuth2UserDetailService extends DefaultOAuth2UserService {
 
         ClubMember member = saveSocialMember(email);
 
-        return oAuth2User;
+        ClubAuthMemberDTO clubAuthMember = new ClubAuthMemberDTO(
+                member.getEmail(),
+                member.getPassword(),
+                true,
+                member.getRoleSet().stream().map(role -> new SimpleGrantedAuthority("ROLE_" + role.name()))
+                        .collect(Collectors.toList()),
+                oAuth2User.getAttributes()
+        );
+        clubAuthMember.setName(member.getName());
+
+        return clubAuthMember;
     }
 
     @Transactional
