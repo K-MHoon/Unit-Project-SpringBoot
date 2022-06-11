@@ -36,6 +36,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/sample/member").hasRole("USER");
         http.formLogin(); // 인증/인가 절차에서 문제가 발생했을 때 로그인 페이지를 보여주도록 지정할 수 있고, 화면으로 로그인 방식을 지원한다는 의미로 사용된다.
         http.csrf().disable();
-        http.logout();
+        http.oauth2Login();
     }
 }
