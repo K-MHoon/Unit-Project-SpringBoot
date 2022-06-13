@@ -1,5 +1,6 @@
 package com.example.ex06.entity.note;
 
+import com.example.ex06.entity.BaseEntity;
 import com.example.ex06.entity.club.ClubMember;
 import lombok.*;
 
@@ -12,7 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Getter
 @ToString
-public class Note {
+public class Note extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,8 +25,6 @@ public class Note {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private ClubMember writer;
-
-    private LocalDateTime regDate, modDate;
 
     public void updateTitle(String title) {
         this.title = title;
