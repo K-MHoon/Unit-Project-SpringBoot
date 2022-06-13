@@ -4,6 +4,7 @@ import com.example.ex06.entity.club.ClubMember;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Builder
@@ -23,6 +24,8 @@ public class Note {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private ClubMember writer;
+
+    private LocalDateTime regDate, modDate;
 
     public void updateTitle(String title) {
         this.title = title;
