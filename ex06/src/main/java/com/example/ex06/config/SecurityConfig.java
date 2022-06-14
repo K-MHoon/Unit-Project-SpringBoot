@@ -1,5 +1,6 @@
 package com.example.ex06.config;
 
+import com.example.ex06.security.filter.ApiCheckFilter;
 import com.example.ex06.security.handler.ClubLoginSuccessHandler;
 import com.example.ex06.security.service.ClubUserDetailsService;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @Slf4j
@@ -45,10 +47,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .antMatchers("/sample/member").hasRole("USER");
         http.formLogin(); // 인증/인가 절차에서 문제가 발생했을 때 로그인 페이지를 보여주도록 지정할 수 있고, 화면으로 로그인 방식을 지원한다는 의미로 사용된다.
         http.csrf().disable();
+        http.logout();
         http.oauth2Login()
                 .successHandler(successHandler());
         http.rememberMe().tokenValiditySeconds(60*60*24*7) // 7days
                 .userDetailsService(userDetailsService);
+        http.addFilterBefore(apiCheckFilter(), UsernamePasswordAuthenticationFilter.class);
+    }
+
+    @Bean
+    public ApiCheckFilter apiCheckFilter() {
+        return new ApiCheckFilter("/notes/**/*");
     }
 
     @Bean
