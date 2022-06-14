@@ -1,6 +1,8 @@
 package com.example.ex06.security.filter;
 
+import com.nimbusds.common.contenttype.ContentType;
 import lombok.extern.slf4j.Slf4j;
+import org.json.simple.JSONObject;
 import org.springframework.http.HttpHeaders;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.StringUtils;
@@ -11,6 +13,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 @Slf4j
 public class ApiCheckFilter extends OncePerRequestFilter {
@@ -36,8 +39,18 @@ public class ApiCheckFilter extends OncePerRequestFilter {
             if(checkHeader) {
                 filterChain.doFilter(request, response);
                 return;
+            } else {
+                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                response.setContentType("application/json;charset=utf-8");
+                JSONObject jsonObject = new JSONObject();
+                String message = "FAIL CHECK API TOKEN";
+                jsonObject.put("code", "403");
+                jsonObject.put("message", message);
+
+                PrintWriter out = response.getWriter();
+                out.print(jsonObject);
+                return;
             }
-            return;
         }
 
         filterChain.doFilter(request, response);
