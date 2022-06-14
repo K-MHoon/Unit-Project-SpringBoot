@@ -1,7 +1,9 @@
 package com.example.ex06.security.filter;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.util.AntPathMatcher;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -29,9 +31,32 @@ public class ApiCheckFilter extends OncePerRequestFilter {
 
         if(antPathMatcher.match(pattern, request.getRequestURI())) {
             log.info("ApiCheckerFilter....");
+
+            boolean checkHeader = checkAuthHeader(request);
+            if(checkHeader) {
+                filterChain.doFilter(request, response);
+                return;
+            }
             return;
         }
 
         filterChain.doFilter(request, response);
     }
+
+    private boolean checkAuthHeader(HttpServletRequest request) {
+        boolean checkResult = false;
+
+        String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+
+        if(StringUtils.hasText(authHeader)) {
+            log.info("Authorization exist : {}", authHeader);
+            if(authHeader.equals("12345678")) {
+                checkResult = true;
+            }
+        }
+
+        return checkResult;
+    }
+
+
 }

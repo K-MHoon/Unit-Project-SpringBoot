@@ -1,6 +1,7 @@
 package com.example.ex06.config;
 
 import com.example.ex06.security.filter.ApiCheckFilter;
+import com.example.ex06.security.filter.ApiLoginFilter;
 import com.example.ex06.security.handler.ClubLoginSuccessHandler;
 import com.example.ex06.security.service.ClubUserDetailsService;
 import lombok.RequiredArgsConstructor;
@@ -53,11 +54,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.rememberMe().tokenValiditySeconds(60*60*24*7) // 7days
                 .userDetailsService(userDetailsService);
         http.addFilterBefore(apiCheckFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(apiLoginFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 
     @Bean
     public ApiCheckFilter apiCheckFilter() {
         return new ApiCheckFilter("/notes/**/*");
+    }
+
+    @Bean
+    public ApiLoginFilter apiLoginFilter() throws Exception {
+
+        ApiLoginFilter apiLoginFilter = new ApiLoginFilter("/api/login");
+        apiLoginFilter.setAuthenticationManager(authenticationManager());
+
+        return apiLoginFilter;
     }
 
     @Bean
