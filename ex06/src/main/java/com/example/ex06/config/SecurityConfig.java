@@ -2,6 +2,7 @@ package com.example.ex06.config;
 
 import com.example.ex06.security.filter.ApiCheckFilter;
 import com.example.ex06.security.filter.ApiLoginFilter;
+import com.example.ex06.security.handler.ApiLoginFailHandler;
 import com.example.ex06.security.handler.ClubLoginSuccessHandler;
 import com.example.ex06.security.service.ClubUserDetailsService;
 import lombok.RequiredArgsConstructor;
@@ -67,6 +68,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         ApiLoginFilter apiLoginFilter = new ApiLoginFilter("/api/login");
         apiLoginFilter.setAuthenticationManager(authenticationManager());
+        apiLoginFilter.setAuthenticationFailureHandler(new ApiLoginFailHandler());
 
         return apiLoginFilter;
     }
